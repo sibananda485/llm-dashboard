@@ -117,4 +117,16 @@
   body {
     @apply bg-background text-foreground;
   }
+ 
 }
+
+   
+
+
+@layer components {
+.react-resizable-handle::after  {
+  border-color: white !important;
+  
+}
+}
+
