@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { GripHorizontal, TrendingUp, X } from "lucide-react";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
@@ -10,15 +10,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
+import { Button } from "./button";
+import { useStore } from "@/store";
 
-export const description = "A linear line chart"
+export const description = "A linear line chart";
 
 const chartData = [
   { month: "January", desktop: 186 },
@@ -27,21 +29,35 @@ const chartData = [
   { month: "April", desktop: 73 },
   { month: "May", desktop: 209 },
   { month: "June", desktop: 214 },
-]
+];
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
     color: "var(--chart-1)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartLineLinear() {
+  const deleteGrid = useStore((state) => state.deleteGrid);
   return (
-    <Card className="max-h-full max-w-full w-full h-full overflow-auto">
+    <Card className="max-h-full max-w-full w-full h-full overflow-auto ">
       <CardHeader>
-        <CardTitle>Line Chart - Linear</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <GripHorizontal className="absolute left-1/2 -translate-x-1/2 top-2 hover:cursor-grab active:cursor-grabbing outline-0 transition-transform hover:scale-125 active:scale-150 yes-drag" />
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Line Chart - Linear</CardTitle>
+            <CardDescription>January - June 2024</CardDescription>
+          </div>
+          <Button
+            className="no-drag"
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => deleteGrid("token-usage")}
+          >
+            <X />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -84,5 +100,5 @@ export function ChartLineLinear() {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

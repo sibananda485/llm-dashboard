@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
+import { GripHorizontal, TrendingUp, X } from "lucide-react";
 import { LabelList, Pie, PieChart } from "recharts";
 
 import {
@@ -12,11 +12,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Button } from "./ui/button";
+import { useStore } from "@/store";
 
 export const description = "A pie chart with a label list";
 
@@ -55,12 +57,28 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartPieLabelList() {
+  const deleteGrid = useStore((state) => state.deleteGrid);
+
   return (
     <Card className="flex flex-col max-h-full max-w-full w-full h-full overflow-auto">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Label List</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+      <CardHeader>
+        <GripHorizontal className="absolute left-1/2 -translate-x-1/2 top-2 hover:cursor-grab active:cursor-grabbing outline-0 transition-transform hover:scale-125 active:scale-150 yes-drag" />
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Pie Chart - Label List</CardTitle>
+            <CardDescription>January - June 2024</CardDescription>
+          </div>
+          <Button
+            className="no-drag"
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => deleteGrid("cost-analysis")}
+          >
+            <X />
+          </Button>
+        </div>
       </CardHeader>
+
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}

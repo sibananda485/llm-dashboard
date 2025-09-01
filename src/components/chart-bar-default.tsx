@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
+import { GripHorizontal, TrendingUp, X } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -12,11 +12,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useStore } from "@/store";
+import { Button } from "./ui/button";
 
 export const description = "A bar chart";
 
@@ -37,12 +39,28 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartBarDefault() {
+  const deleteGrid = useStore((state) => state.deleteGrid);
+
   return (
     <Card className="max-h-full max-w-full w-full h-full overflow-auto">
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <GripHorizontal className="absolute left-1/2 -translate-x-1/2 top-2 hover:cursor-grab active:cursor-grabbing outline-0 transition-transform hover:scale-125 active:scale-150 yes-drag" />
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Bar Chart</CardTitle>
+            <CardDescription>January - June 2024</CardDescription>
+          </div>
+          <Button
+            className="no-drag"
+            variant={"outline"}
+            size={"icon"}
+            onClick={() => deleteGrid("latency-distribution")}
+          >
+            <X />
+          </Button>
+        </div>
       </CardHeader>
+
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
