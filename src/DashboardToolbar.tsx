@@ -31,7 +31,7 @@ import { useStore } from "./store";
 // import { toast } from "sonner";
 
 interface WidgetTypes {
-  id: string;
+  i: string;
   name: string;
   description: string;
   icon: ForwardRefExoticComponent<
@@ -42,7 +42,7 @@ interface WidgetTypes {
 }
 const widgetTypes: WidgetTypes[] = [
   {
-    id: "token-usage",
+    i: "token-usage",
     name: "Token Usage Over Time",
     description: "Track token consumption trends and patterns",
     icon: BarChart3,
@@ -50,7 +50,7 @@ const widgetTypes: WidgetTypes[] = [
     disable: false,
   },
   {
-    id: "latency-distribution",
+    i: "latency-distribution",
     name: "Latency Distribution",
     description: "Monitor response times and performance metrics",
     icon: Clock,
@@ -58,7 +58,7 @@ const widgetTypes: WidgetTypes[] = [
     category: "Performance",
   },
   {
-    id: "cost-analysis",
+    i: "cost-analysis",
     name: "Cost Analysis",
     description: "Analyze spending patterns and cost optimization",
     icon: DollarSign,
@@ -66,7 +66,7 @@ const widgetTypes: WidgetTypes[] = [
     category: "Financial",
   },
   {
-    id: "error-rate",
+    i: "error-rate",
     name: "Error Rate Monitor",
     description: "Track API errors and success rates",
     disable: true,
@@ -74,7 +74,7 @@ const widgetTypes: WidgetTypes[] = [
     category: "Performance",
   },
   {
-    id: "user-activity",
+    i: "user-activity",
     name: "User Activity",
     description: "Monitor user engagement and active sessions",
     icon: Users,
@@ -93,7 +93,7 @@ export default function DashboardToolbar() {
   );
   const [isOpen, setIsOpen] = useState(false);
   const handleAddWidget = (widget: WidgetTypes) => {
-    addWidget(widget.id);
+    addWidget(widget.i);
     setIsOpen(false);
     setSelectedWidget(null);
   };
@@ -141,14 +141,14 @@ export default function DashboardToolbar() {
                     .filter((widget) => widget.category === category)
                     .map((widget) => {
                       const IconComponent = widget.icon;
-                      const isSelected = selectedWidget?.id === widget.id;
+                      const isSelected = selectedWidget?.i === widget.i;
                       const hasInGrid = !!layout.find(
-                        (item) => item.i == widget.id
+                        (item) => item.i == widget.i
                       );
                       const isDisable = widget.disable || hasInGrid;
                       return (
                         <div
-                          key={widget.id}
+                          key={widget.i}
                           className={cn(
                             "relative p-4 rounded-lg border cursor-pointer transition-all duration-200",
                             isSelected && "outline-2 outline-foreground",

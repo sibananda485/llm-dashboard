@@ -1,7 +1,7 @@
 import type { Layout } from "react-grid-layout";
 import { create } from "zustand";
 
-interface GridState {
+interface StoreState {
   layout: Layout[];
   setLayout: (layout: Layout[]) => void;
   deleteWidget: (i: string) => void;
@@ -17,7 +17,7 @@ const initialLayout = savedLayout
       { i: "cost-analysis", x: 2, y: 0, w: 1, h: 4 },
     ];
 
-export const useStore = create<GridState>((set) => ({
+export const useStore = create<StoreState>((set) => ({
   layout: initialLayout,
   setLayout: (layout: Layout[]) => {
     localStorage.setItem("dashboard-layout", JSON.stringify(layout));

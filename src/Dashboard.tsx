@@ -22,11 +22,11 @@ export default function Dashboard() {
   return (
     <div>
       <ResponsiveGridLayout
-        draggableHandle=".yes-drag"
         layout={layout}
-        cols={3}
         onLayoutChange={setLayout}
+        cols={3}
         rowHeight={100}
+        draggableHandle=".yes-drag"
       >
         {layout.map((item) => (
           <div key={item.i}>{charts[item.i as ChartKey]}</div>
