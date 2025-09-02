@@ -1,4 +1,4 @@
-# Project Name
+# LLM Dashboard
 
 A modern web application built with **Vite**, **React**, and **TypeScript**.
 
