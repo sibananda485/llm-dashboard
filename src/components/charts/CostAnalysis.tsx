@@ -1,6 +1,6 @@
 "use client";
 
-import { GripHorizontal, TrendingUp, X } from "lucide-react";
+import { GripHorizontal, RotateCcw, TrendingUp, X } from "lucide-react";
 import { LabelList, Pie, PieChart } from "recharts";
 
 import {
@@ -17,47 +17,57 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Button } from "./ui/button";
 import { useStore } from "@/store";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCostAnalysis } from "@/services/mockApi";
+import type { CostAnalysis } from "@/services/data";
+import CostAnalysisSkeleton from "@/components/skeletons/CostAnalysisSkeleton";
+import { Button } from "../ui/button";
 
 export const description = "A pie chart with a label list";
 
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-];
-
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  cost: {
+    label: "Costs",
   },
-  chrome: {
-    label: "Chrome",
-    color: "var(--chart-1)",
+  gpt4: {
+    label: "GPT-4",
+    color: "var(--chart-gpt)",
   },
-  safari: {
-    label: "Safari",
-    color: "var(--chart-2)",
+  claude2: {
+    label: "Claude 2",
+    color: "var(--chart-claude)",
   },
-  firefox: {
-    label: "Firefox",
-    color: "var(--chart-3)",
-  },
-  edge: {
-    label: "Edge",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Other",
-    color: "var(--chart-5)",
+  llama2: {
+    label: "Llama 2",
+    color: "var(--chart-meta)",
   },
 } satisfies ChartConfig;
 
-export function ChartPieLabelList() {
-  const deleteGrid = useStore((state) => state.deleteGrid);
+export function CostAnalysis() {
+  const deleteWidget = useStore((state) => state.deleteWidget);
+  const {
+    isPending,
+    error,
+    refetch,
+    data: chartData = [],
+  } = useQuery<CostAnalysis[]>({
+    queryKey: ["costAnalysis"],
+    queryFn: fetchCostAnalysis,
+  });
+  if (isPending) return <CostAnalysisSkeleton />;
+
+  if (error)
+    return (
+      <Card className="flex flex-col bg-red-900/10 max-h-full max-w-full w-full h-full overflow-auto justify-center items-center">
+        <div className="text-destructive font-bold tracking-tighter">
+          Something went wrong
+        </div>
+        <Button onClick={() => refetch()} variant={"outline"}>
+          Retry <RotateCcw />
+        </Button>
+      </Card>
+    );
 
   return (
     <Card className="flex flex-col max-h-full max-w-full w-full h-full overflow-auto">
@@ -65,14 +75,14 @@ export function ChartPieLabelList() {
         <GripHorizontal className="absolute left-1/2 -translate-x-1/2 top-2 hover:cursor-grab active:cursor-grabbing outline-0 transition-transform hover:scale-125 active:scale-150 yes-drag" />
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Pie Chart - Label List</CardTitle>
+            <CardTitle>Cost Analysis</CardTitle>
             <CardDescription>January - June 2024</CardDescription>
           </div>
           <Button
             className="no-drag"
             variant={"outline"}
             size={"icon"}
-            onClick={() => deleteGrid("cost-analysis")}
+            onClick={() => deleteWidget("cost-analysis")}
           >
             <X />
           </Button>
@@ -86,11 +96,11 @@ export function ChartPieLabelList() {
         >
           <PieChart>
             <ChartTooltip
-              content={<ChartTooltipContent nameKey="visitors" hideLabel />}
+              content={<ChartTooltipContent nameKey="cost" hideLabel />}
             />
-            <Pie data={chartData} dataKey="visitors">
+            <Pie data={chartData} dataKey="cost">
               <LabelList
-                dataKey="browser"
+                dataKey="model_name"
                 className="fill-background"
                 stroke="none"
                 fontSize={12}
@@ -107,7 +117,7 @@ export function ChartPieLabelList() {
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
+          Showing total cost for the last 6 months
         </div>
       </CardFooter>
     </Card>

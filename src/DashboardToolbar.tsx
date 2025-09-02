@@ -18,6 +18,7 @@ import {
   Check,
   Sparkle,
   CheckCheck,
+  // Save,
 } from "lucide-react";
 import {
   useState,
@@ -27,6 +28,8 @@ import {
 import { cn } from "./lib/utils";
 import { Badge } from "./components/ui/badge";
 import { useStore } from "./store";
+// import { toast } from "sonner";
+
 interface WidgetTypes {
   id: string;
   name: string;
@@ -82,20 +85,34 @@ const widgetTypes: WidgetTypes[] = [
 
 const categories = [...new Set(widgetTypes.map((widget) => widget.category))];
 
-export default function Toolbar() {
+export default function DashboardToolbar() {
   const layout = useStore((state) => state.layout);
-  const addGrid = useStore((state) => state.addGrid);
+  const addWidget = useStore((state) => state.addWidget);
   const [selectedWidget, setSelectedWidget] = useState<WidgetTypes | null>(
     null
   );
   const [isOpen, setIsOpen] = useState(false);
   const handleAddWidget = (widget: WidgetTypes) => {
-    addGrid(widget.id);
+    addWidget(widget.id);
     setIsOpen(false);
     setSelectedWidget(null);
   };
+  // const handleSaveLayout = () => {
+  //   localStorage.setItem("dashboard-layout", JSON.stringify(layout));
+  //   toast("You Dashboard Layout Saved 👍", {
+  //     description: "You will see this dashboard view by default",
+  //     action: {
+  //       label: "Ok",
+  //       onClick: () => console.log("ok"),
+  //     },
+  //   });
+  // };
   return (
-    <div className="mx-6 mt-2 ms-auto">
+    <div className="mx-6 mt-2 space-x-4 ms-auto">
+      {/* <Button onClick={handleSaveLayout} variant={"secondary"}>
+        <Save />
+        Save Layout
+      </Button> */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button>

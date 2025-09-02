@@ -1,18 +1,18 @@
 import GridLayout, { WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { ChartLineLinear } from "./components/ui/chart-line-linear";
-import { ChartBarDefault } from "./components/chart-bar-default";
-import { ChartPieLabelList } from "./components/chart-pie-label-list";
 import { useStore } from "./store";
+import { TokenUsage } from "./components/charts/TokenUsage";
+import { LatencyDistribution } from "./components/charts/LatencyDistribution";
+import { CostAnalysis } from "./components/charts/CostAnalysis";
 
 const ResponsiveGridLayout = WidthProvider(GridLayout);
 type ChartKey = "token-usage" | "latency-distribution" | "cost-analysis";
 
 const charts = {
-  "token-usage": <ChartLineLinear />,
-  "latency-distribution": <ChartBarDefault />,
-  "cost-analysis": <ChartPieLabelList />,
+  "token-usage": <TokenUsage />,
+  "latency-distribution": <LatencyDistribution />,
+  "cost-analysis": <CostAnalysis />,
 };
 
 export default function Dashboard() {

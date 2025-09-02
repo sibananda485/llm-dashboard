@@ -1,8 +1,8 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import Dashboard from "./Dashboard";
-import Toolbar from "./tool-bar";
+import DashboardToolbar from "./DashboardToolbar";
+import { AppSidebar } from "./components/layout/app-sidebar";
+import { SiteHeader } from "./components/layout/site-header";
 
 export default function App() {
   return (
@@ -18,7 +18,7 @@ export default function App() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <Toolbar />
+        <DashboardToolbar />
         <Dashboard />
       </SidebarInset>
     </SidebarProvider>

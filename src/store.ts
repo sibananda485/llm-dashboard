@@ -4,17 +4,28 @@ import { create } from "zustand";
 interface GridState {
   layout: Layout[];
   setLayout: (layout: Layout[]) => void;
-  deleteGrid: (i: string) => void;
-  addGrid: (i: string) => void;
+  deleteWidget: (i: string) => void;
+  addWidget: (i: string) => void;
 }
 
+const savedLayout = localStorage.getItem("dashboard-layout");
+const initialLayout = savedLayout
+  ? JSON.parse(savedLayout)
+  : [
+      { i: "token-usage", x: 0, y: 0, w: 1, h: 4 },
+      { i: "latency-distribution", x: 1, y: 0, w: 1, h: 4 },
+      { i: "cost-analysis", x: 2, y: 0, w: 1, h: 4 },
+    ];
+
 export const useStore = create<GridState>((set) => ({
-  layout: [{ i: "token-usage", x: 0, y: 0, w: 1, h: 4 }],
-  setLayout: (layout: Layout[]) => set(() => ({ layout: layout })),
-  hasGrid: (layout: Layout[]) => set(() => ({ layout: layout })),
-  deleteGrid: (i: string) =>
+  layout: initialLayout,
+  setLayout: (layout: Layout[]) => {
+    localStorage.setItem("dashboard-layout", JSON.stringify(layout));
+    return set(() => ({ layout: layout }));
+  },
+  deleteWidget: (i: string) =>
     set(({ layout }) => ({ layout: layout.filter((item) => item.i != i) })),
-  addGrid: (i: string) =>
+  addWidget: (i: string) =>
     set(({ layout }) => ({
       layout: [
         ...layout,

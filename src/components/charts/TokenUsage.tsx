@@ -1,7 +1,7 @@
 "use client";
 
-import { GripHorizontal, TrendingUp, X } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { GripHorizontal, RotateCcw, TrendingUp, X } from "lucide-react";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -17,43 +17,61 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Button } from "./button";
 import { useStore } from "@/store";
+import { useQuery } from "@tanstack/react-query";
+import type { TokenUsage } from "@/services/data";
+import { fetchTokenUsage } from "@/services/mockApi";
+import TokenUsageSkeleton from "@/components/skeletons/TokenUsageSkeleton";
+import { Button } from "../ui/button";
 
 export const description = "A linear line chart";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
-
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  tokens: {
+    label: "Tokens",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
-export function ChartLineLinear() {
-  const deleteGrid = useStore((state) => state.deleteGrid);
+export function TokenUsage() {
+  const deleteWidget = useStore((state) => state.deleteWidget);
+  const {
+    isPending,
+    error,
+    refetch,
+    data: chartData = [],
+  } = useQuery<TokenUsage[]>({
+    queryKey: ["tokenUsage"],
+    queryFn: fetchTokenUsage,
+  });
+  if (isPending) return <TokenUsageSkeleton />;
+
+  if (error)
+    return (
+      <Card className="flex flex-col bg-red-900/10 max-h-full max-w-full w-full h-full overflow-auto justify-center items-center">
+        <div className="text-destructive font-bold tracking-tighter">
+          Something went wrong
+        </div>
+        <Button onClick={() => refetch()} variant={"outline"}>
+          Retry <RotateCcw />
+        </Button>
+      </Card>
+    );
+
   return (
     <Card className="max-h-full max-w-full w-full h-full overflow-auto ">
       <CardHeader>
         <GripHorizontal className="absolute left-1/2 -translate-x-1/2 top-2 hover:cursor-grab active:cursor-grabbing outline-0 transition-transform hover:scale-125 active:scale-150 yes-drag" />
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Line Chart - Linear</CardTitle>
-            <CardDescription>January - June 2024</CardDescription>
+            <CardTitle>Token Usage</CardTitle>
+            <CardDescription>June - Sept 2025</CardDescription>
           </div>
           <Button
             className="no-drag"
             variant={"outline"}
             size={"icon"}
-            onClick={() => deleteGrid("token-usage")}
+            onClick={() => deleteWidget("token-usage")}
           >
             <X />
           </Button>
@@ -65,26 +83,38 @@ export function ChartLineLinear() {
             accessibilityLayer
             data={chartData}
             margin={{
-              left: 12,
-              right: 12,
+              left: -38,
             }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="timestamp"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) =>
+                new Date(value).toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+              }
+            />
+            <YAxis
+              domain={[1000, "auto"]}
+              tickLine={false}
+              axisLine={false}
+              tickMargin={100}
+              // tick={false}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
-              dataKey="desktop"
+              dataKey="tokens"
               type="linear"
-              stroke="var(--color-desktop)"
+              stroke="var(--color-tokens)"
               strokeWidth={2}
               dot={false}
             />
@@ -93,7 +123,7 @@ export function ChartLineLinear() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by 5.2% this timestamp <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
           Showing total visitors for the last 6 months
