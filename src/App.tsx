@@ -3,6 +3,7 @@ import Dashboard from "./Dashboard";
 import DashboardToolbar from "./DashboardToolbar";
 import { AppSidebar } from "./components/layout/app-sidebar";
 import { SiteHeader } from "./components/layout/site-header";
+import ModelSelectForm from "./ModelSelectForm";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
       <SidebarInset>
         <SiteHeader />
         <DashboardToolbar />
+        <ModelSelectForm />
         <Dashboard />
       </SidebarInset>
     </SidebarProvider>
